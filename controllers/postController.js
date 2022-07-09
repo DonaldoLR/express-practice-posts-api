@@ -51,10 +51,26 @@ const updatePost = async (req, res) => {
 	res.status(200).json({ message: 'Post updated', updatedPost });
 };
 // DELETE
+const deletePost = async (req, res) => {
+	const { id } = req.params;
+
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(404).json({ error: 'Post ID is not valid' });
+	}
+
+	const deletedPost = await Post.findByIdAndDelete(id);
+
+	if (!deletedPost) {
+		return res.status(500).json({ error: 'Unable to delete post' });
+	}
+
+	res.status(200).json({ message: 'Post deleted', deletedPost });
+};
 
 module.exports = {
 	createPost,
 	getPosts,
 	getPost,
 	updatePost,
+	deletePost,
 };
