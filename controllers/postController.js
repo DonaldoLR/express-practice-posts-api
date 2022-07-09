@@ -2,7 +2,17 @@ const Post = require('../models/post');
 const mongoose = require('mongoose');
 
 // CREATE
+const createPost = async (req, res) => {
+	const { title, body } = req.body;
 
+	const newPost = await Post.create({ title, body });
+
+	if (!newPost) {
+		return res.status(500).json({ error: 'Unable to create new post' });
+	}
+
+	res.status(200).json(newPost);
+};
 // GET ALL
 const getPosts = async (req, res) => {
 	const posts = await Post.find({}).sort({ createdAt: -1 });
@@ -29,6 +39,7 @@ const getPost = async (req, res) => {
 // DELETE
 
 module.exports = {
+	createPost,
 	getPosts,
 	getPost,
 };
