@@ -35,11 +35,26 @@ const getPost = async (req, res) => {
 	res.status(200).json(singlePost);
 };
 // UPDATE
+const updatePost = async (req, res) => {
+	const { id } = req.params;
 
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(404).json({ error: 'Post ID is not valid' });
+	}
+
+	const updatedPost = await Post.findByIdAndUpdate(id, { ...req.body });
+
+	if (!updatedPost) {
+		return res.status(500).json({ error: 'Unable to update post' });
+	}
+
+	res.status(200).json({ message: 'Post updated', updatedPost });
+};
 // DELETE
 
 module.exports = {
 	createPost,
 	getPosts,
 	getPost,
+	updatePost,
 };
